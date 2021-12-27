@@ -1,0 +1,129 @@
+import axios from "axios";
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+
+function Login() {
+  //   const params = useParams();
+  //   console.log(params);
+  const user = { username: "", password: "" };
+  const [error, seterror] = useState(user);
+
+  const usernamecheck = (event: any) => {
+    seterror({
+      username: "",
+      password: "",
+    });
+    if (event.target.value.includes(" ")) {
+      showError("username", "Username cannot have spaces in between");
+    }
+    var format = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    if (format.test(event.target.value)) {
+      showError("username", "Username cannot have special charcters");
+    }
+    if (event.target.value.length < 6) {
+      showError("username", "Username should be greater in length");
+    }
+  };
+  const passcheck = (event: any) => {
+    seterror({
+      username: "",
+      password: "",
+    });
+    if (event.target.value.includes(" ")) {
+      showError("password", "Password cannot have spaces in between");
+    }
+
+    if (event.target.value.length < 6) {
+      showError("password", "Password should be greater in length");
+    }
+  };
+  const submit = async (event: any) => {
+    event.preventDefault();
+    const { password, username } = event.target.elements;
+    seterror({
+      username: "",
+      password: "",
+    });
+    if (password.value.includes(" ")) {
+      showError("password", "Password cannot have spaces in between");
+    }
+
+    if (username.value.includes(" ")) {
+      showError("username", "Username cannot have spaces in between");
+    }
+    // if (password.value.length < 6) {
+    //   seterror({
+    //     username: "",
+    //     password: "Password should be greater in length ",
+    //   });
+    // }
+    if (username.value === "") {
+      showError("username", "Username cannot be empty");
+    }
+    if (password.value === "") {
+      showError("password", "Password cannot be empty");
+    }
+    const val: any = await api(username.value, password.value);
+    console.log(val.data.token);
+  };
+
+  function showError(type: "username" | "password" | "email", error: string) {
+    seterror((prevState) => ({
+      ...prevState,
+      [type]: error,
+    }));
+    //  return {
+    //    ...values,
+    //    [type]: error
+    //   });
+  }
+  async function api(username: string, password: string) {
+    return await axios({
+      method: "POST",
+      url: "http://localhost:3001/user/login",
+      data: {
+        username,
+        password, // This is the body part
+      },
+    }).catch((err) => {
+      console.log(err.response.data);
+    });
+  }
+  return (
+    <div className="container">
+      <form onSubmit={submit}>
+        <h1>Login</h1>
+        <hr className="solid"></hr>
+        <div className="fields">
+          <label>Username</label>
+          <input
+            type="text"
+            // minLength={10}
+            // maxLength={20}
+            name="username"
+            placeholder="Username"
+            onChange={usernamecheck}
+          ></input>
+        </div>
+        <div className="fields">
+          <label>Password</label>
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            onChange={passcheck}
+          ></input>
+        </div>
+        <div className="error">
+          {error.username}
+          {error.password}
+        </div>
+        <div className="button">
+          <button type="submit">Login</button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+export default Login;

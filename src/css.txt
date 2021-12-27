@@ -1,11 +1,11 @@
 body {
-  /* background: rgb(2, 0, 36);
+  background: rgb(2, 0, 36);
   background: radial-gradient(
     circle,
     rgba(2, 0, 36, 1) 0%,
     rgba(30, 54, 59, 1) 0%,
     rgba(93, 93, 116, 1) 100%
-  ); */
+  );
 }
 h1 {
   margin-bottom: 20px;
@@ -41,6 +41,9 @@ button {
   border: none;
   color: #fff;
 }
+p {
+  color: red;
+}
 
 .field {
   display: flex !important;
@@ -59,44 +62,10 @@ input {
   padding: 12px 20px;
   margin: 10px 0;
   box-sizing: border-box;
-  border: 1px solid black;
+  border: 2px solid black;
   border-radius: 4px;
 }
 
-.error {
-  color: red;
-  margin-bottom: 10px;
-}
-hr {
-  margin-bottom: 20px;
-}
-.sucess {
-  color: green;
-}
+.containerA{
 
-.forgotpass {
-  text-align: right;
-}
-.loginsign {
-  text-align: center;
-}
-.book {
-  height: auto;
-  display: block;
-  margin-right: auto;
-}
-.book-detail {
-  object-position: top;
-  display: inline;
-  padding-left: 100px;
-  vertical-align: 70px;
-}
-/* .book-detail {
-  display: inline;
-  font-size: 20px;
-  vertical-align: 100px;
-  padding-left: 500px;
-} */
-.book-header {
-  font-size: 35px;
 }
