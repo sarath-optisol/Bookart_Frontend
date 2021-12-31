@@ -37,10 +37,9 @@ export default function EachBook() {
   useEffect(() => {
     getAllBooks();
   }, []);
-  // const bookss =;
 
   return (
-    <div>
+    <div className="container-sm my-5">
       <Row>
         {books.map((book) => (
           <Col className="col-sm-6 col-md-3">

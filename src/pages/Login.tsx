@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,7 +9,11 @@ type formvalues = {
   password: string;
 };
 toast.configure();
-function Login() {
+// interface Props {
+//   setIsAuth: React.Dispatch<React.SetStateAction<boolean>>;
+// // }
+// const Login: React.FC<Props> = ({ setIsAuth }) => {
+function Login({ setIsAdmin }: any) {
   const {
     register,
     handleSubmit,
@@ -19,8 +23,7 @@ function Login() {
   const errMessage = () => {
     toast(fail, { theme: "dark" });
   };
-  // console.log(token);
-  // localStorage.setItem("token", token);
+
   return (
     <div className="container">
       <form
@@ -35,6 +38,7 @@ function Login() {
           })
             .then((res) => {
               localStorage.setItem("token", res.data.token);
+              setIsAdmin(false);
             })
             .catch((err) => {
               setFail(err.response.data.error);

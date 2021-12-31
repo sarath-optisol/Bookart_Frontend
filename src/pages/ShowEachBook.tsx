@@ -2,6 +2,9 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Nav, Tab, Tabs } from "react-bootstrap";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { url } from "inspector";
 export default function ShowEachBook() {
   const [availble, setAvailable] = useState("Out of stock");
   const [flag, setFlag] = useState(false);
@@ -21,7 +24,23 @@ export default function ShowEachBook() {
     updatedAt: "",
     deletedAt: null,
   });
-
+  const addBookTocart = async () => {
+    await axios
+      .post(
+        "http://localhost:3001/cart/create",
+        {
+          bookId: Number(id),
+          quantity: 1,
+        },
+        { headers: { auth: `Bearer ${localStorage.getItem("token")}` ?? "" } }
+      )
+      .then((res) => {
+        toast.success(res.data);
+      })
+      .catch((err) => {
+        toast.error("Login to add books to cart");
+      });
+  };
   const { id } = useParams();
   const getBook = async () => {
     await axios({
@@ -38,18 +57,13 @@ export default function ShowEachBook() {
           setFlag(false);
         }
       })
-      .catch((err) => {
-        console.log(err.response.data);
-      });
+      .catch((err) => {});
   };
 
   useEffect(() => {
     getBook();
   }, []);
-  // const checkAvailability = () => {
-  //   if (book.quantity) setAvailable("In stock");
-  //   else setAvailable("Out of stock");
-  // };
+
   return (
     <div className="container-sm  mt-2 mb-3">
       <div className="product-page mx-5">
@@ -68,27 +82,34 @@ export default function ShowEachBook() {
             <div className="d-flex justify-content-between">
               <div>
                 <h5 className=""> Author: {book.authorname}</h5>
-                <p>
+                <div>
                   Availability:
-                  <p
+                  <div
                     style={flag ? { color: "green" } : { color: "red" }}
                     className="m-0 p-0"
                   >
                     {availble}
-                  </p>
-                </p>
+                  </div>
+                </div>
               </div>
               <div className="price lead text-success">
                 <p className="m-0">Price:</p>Rs. ₹{book.price}
               </div>
 
               <div className="addcart mt-3">
-                <button className="btn">Add to cart</button>
+                <button className="btn" onClick={addBookTocart}>
+                  Add to cart
+                </button>
+                <ToastContainer limit={1} />
               </div>
             </div>
-            <hr className="seprator m-0"></hr>
-            <div className="description">
-              <p>{book.description}</p>
+            <hr className="seprator mb-3"></hr>
+            <div className="row">
+              <div className="col-12">
+                <div className="description">
+                  <p>{book.description}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -120,87 +141,7 @@ export default function ShowEachBook() {
             </Tab>
           </Tabs>
         </div>
-        {/* <div className="nav nav-tabs" id="nav-tab" role="tablist">
-          <button
-            className="nav-link active"
-            id="nav-description-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#nav-description"
-            type="button"
-            role="tab"
-            aria-controls="nav-description"
-            aria-selected="true"
-          >
-            Description
-          </button>
-          <button
-            className="nav-link active"
-            id="nav-details-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#nav-details"
-            type="button"
-            role="tab"
-            aria-controls="nav-details"
-            aria-selected="true"
-          >
-            Details
-          </button>
-        </div>
-        <div className="tab-content" id="nav-tabContent">
-          <div
-            className="tab-pane fade show active p-3"
-            id="nav-description"
-            role="tabpanel"
-            aria-labelledby="nav-description-tab"
-          >
-            <h3>Description</h3>
-            <p>{book.description}</p>
-          </div>
-          <div
-            className="tab-pane fade show p-3"
-            id="nav-details"
-            role="tabpanel"
-            aria-labelledby="nav-details-tab"
-          >
-            <h3>Details</h3>
-            <p>{book.name}</p>
-          </div>
-        </div> */}
-        {/* <div className="tab-content" id="myTabContent">
-          <div
-            className="tab-pane fade show active"
-            id="home"
-            role="tabpanel"
-            aria-labelledby="home-tab"
-          >
-            this is the table coneteny
-          </div>
-          <div
-            className="tab-pane fade"
-            id="profile"
-            role="tabpanel"
-            aria-labelledby="profile-tab"
-          >
-            ...
-          </div>
-          <div
-            className="tab-pane fade"
-            id="contact"
-            role="tabpanel"
-            aria-labelledby="contact-tab"
-          >
-            ...
-          </div>
-        </div> */}
       </div>
     </div>
   );
 }
-
-/* {book.price}
-      {book.authorname}
-      {book.publisher}
-      {book.language}
-      {book.description}
-      {book.releasedate}
-      {book.category} */
