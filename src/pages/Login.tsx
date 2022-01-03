@@ -37,8 +37,7 @@ function Login({ setIsAdmin }: any) {
             },
           })
             .then((res) => {
-              localStorage.setItem("token", res.data.token);
-              setIsAdmin(false);
+              localStorage.setItem("user", res.data.token);
             })
             .catch((err) => {
               setFail(err.response.data.error);

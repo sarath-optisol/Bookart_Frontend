@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Navigate, Outlet, RouteProps } from "react-router";
 import { Route, useNavigate, Routes } from "react-router-dom";
+import { useSelector, TypedUseSelectorHook, RootStateOrAny } from "react-redux";
 // interface Props extends RouteProps {
 //   isAuth: boolean;
 //   component: React.FC;
@@ -12,10 +13,19 @@ function useAuth() {
   }
   return false;
 }
-
+function CheckAdmin() {
+  if (localStorage.getItem("admin")) {
+    return true;
+  } else return false;
+}
 function PrivateRoute({ children }: any) {
   const auth = useAuth();
   return auth ? children : <Navigate to="/login" />;
+}
+
+function AdminRoute({ children }: any) {
+  const isAdmin = CheckAdmin();
+  return isAdmin ? children : <Navigate to="/admin/login" />;
 }
 // export default function ProtectedRoutes({ isAuth, ...routeProps }: Props) {
 //     if (isAuth) return <Route {...routeProps} />;
@@ -54,4 +64,4 @@ function PrivateRoute({ children }: any) {
 //     />
 //   );
 // }
-export { PrivateRoute, useAuth };
+export { PrivateRoute, useAuth, AdminRoute };

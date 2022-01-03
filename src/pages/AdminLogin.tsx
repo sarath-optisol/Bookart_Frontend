@@ -3,13 +3,12 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link } from "react-router-dom";
 type formvalues = {
   username: string;
   password: string;
 };
 toast.configure();
-export default function AdminLogin() {
+export default function AdminLogin({ setIsAdmin }: any) {
   const {
     register,
     handleSubmit,
@@ -19,7 +18,7 @@ export default function AdminLogin() {
   const errMessage = () => {
     toast(fail, { theme: "dark" });
   };
-
+  // const navigateto = useNavigate();
   return (
     <div className="container">
       <form
@@ -33,7 +32,13 @@ export default function AdminLogin() {
             },
           })
             .then((res) => {
-              localStorage.setItem("token", res.data.token);
+              localStorage.setItem("admin", res.data.token);
+              // navigateto("/profile");
+              // try {
+              //   setIsAdmin(true);
+              // } catch (err) {
+              //   console.log(err);
+              // }
             })
             .catch((err) => {
               setFail(err.response.data.error);

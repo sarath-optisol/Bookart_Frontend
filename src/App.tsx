@@ -12,10 +12,8 @@ import AdminLogin from "./pages/AdminLogin";
 import Lis from "./pages/Book";
 import Book from "./pages/ShowEachBook";
 import Createbook from "./pages/createbook";
-import { useState } from "react";
-import { PrivateRoute, useAuth } from "./pages/AuthRoutes";
+import { PrivateRoute, AdminRoute } from "./pages/AuthRoutes";
 function App() {
-  const [isAdmin, setIsAdmin] = useState(false);
   return (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -27,14 +25,15 @@ function App() {
         element={<ResetPassword />}
       />
       <Route path="/admin/login" element={<AdminLogin />} />
+
       <Route path="/exp" element={<Lis />} />
       <Route path="/book/:id" element={<Book />} />
       <Route
-        path="/profile"
+        path="/admin/create-book"
         element={
-          <PrivateRoute>
+          <AdminRoute>
             <Createbook />
-          </PrivateRoute>
+          </AdminRoute>
         }
       />
       {/* <Route
