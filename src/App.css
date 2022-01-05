@@ -110,3 +110,19 @@ hr {
 .productimg:hover {
   transform: scale(1.1);
 }
+
+.cartbody table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.cartbody table thead {
+  font-weight: 700;
+}
+
+.cartbody table thead td {
+  background: rgb(238, 99, 35);
+  color: white;
+  border: none;
+}

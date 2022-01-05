@@ -1,19 +1,33 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { Book } from "../components/BookCard/index";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
+export default function UpdateBook({ preloadedvalues }: any) {
+  const { id } = useParams();
+  const [btnState, setBtnState] = useState(false);
 
-export default function Createbook() {
+  const [flag, setFlag] = useState(false);
+  const [text, setText] = useState("");
+  const [available, setAvailable] = useState("");
+  const [data, setData] = useState<Book>();
   const {
     formState: { errors },
     handleSubmit,
     register,
-  } = useForm<Book>();
-  const [flag, setFlag] = useState(false);
-  const [text, setText] = useState("");
-  const [available, setAvailable] = useState("");
+  } = useForm<Book>({ defaultValues: preloadedvalues });
+  const getBookData = async () => {
+    await axios
+      .get(`http://localhost:3001/book/searchbyid/${id}`)
+      .then((res) => {
+        setData(res.data);
+      });
+  };
+  useEffect(() => {
+    getBookData();
+  }, []);
 
   function wordCheck(e: any) {
     if (e.target.value) {
@@ -29,16 +43,18 @@ export default function Createbook() {
     }
     return;
   }
+  toast.configure();
   return (
     <div className="container-sm mt-5">
       <div className="addbook">
-        <p className="text-center display-4">Add book</p>
+        <p className="text-center display-4">Update book</p>
         <form
           onSubmit={handleSubmit(async (data) => {
             if (!text) {
+              setBtnState(true);
               await axios
-                .post(
-                  "http://localhost:3001/book/create",
+                .put(
+                  `http://localhost:3001/book/update/${id}`,
                   {
                     name: data.name,
                     price: data.price,
@@ -58,9 +74,10 @@ export default function Createbook() {
                   }
                 )
                 .then((res) => {
-                  toast.success(res.data);
+                  toast.success("Book Updated");
                   setFlag(true);
-                  setAvailable("Book added");
+                  setBtnState(false);
+                  setAvailable("Book Updated");
                 })
                 .catch((err) => {
                   toast.error(err.response.data.error);
@@ -76,6 +93,7 @@ export default function Createbook() {
               <label htmlFor="name">Name</label>
               <input
                 className=" border border-muted"
+                // defaultValue={data?.name}
                 {...register("name", {
                   pattern: {
                     value: /^[A-Za-z0-9]/,
@@ -100,6 +118,7 @@ export default function Createbook() {
             <div className="fields">
               <label htmlFor="image">Book Image URL</label>
               <input
+                // defaultValue={data?.image}
                 className="border border-muted"
                 {...register("image", {
                   required: { value: true, message: "Image URL is required" },
@@ -113,6 +132,7 @@ export default function Createbook() {
             <div className="fields">
               <label htmlFor="description">Description</label>
               <textarea
+                // defaultValue={data?.description}
                 id="description"
                 {...register("description", {
                   required: true,
@@ -128,6 +148,7 @@ export default function Createbook() {
             <div className="fields">
               <label htmlFor="price">Price</label>
               <input
+                // defaultValue={data?.price}
                 className=" border border-muted"
                 type={"number"}
                 min={0}
@@ -137,6 +158,10 @@ export default function Createbook() {
                   maxLength: {
                     value: 9,
                     message: "The Maximum limit reached",
+                  },
+                  min: {
+                    value: 0,
+                    message: "The minimum value is 0",
                   },
                 })}
                 id="price"
@@ -148,6 +173,7 @@ export default function Createbook() {
             <div className="fields">
               <label htmlFor="authorname">Author name</label>
               <input
+                // defaultValue={data?.authorname}
                 className=" border border-muted"
                 {...register("authorname", {
                   pattern: {
@@ -175,6 +201,7 @@ export default function Createbook() {
             <div className="fields">
               <label htmlFor="publisher">Publisher name</label>
               <input
+                // defaultValue={data?.publisher}
                 className=" border border-muted"
                 {...register("publisher", {
                   pattern: {
@@ -200,6 +227,7 @@ export default function Createbook() {
             <div className="fields">
               <label htmlFor="language">Language</label>
               <input
+                // defaultValue={data?.language}
                 className=" border border-muted"
                 {...register("language", {
                   pattern: {
@@ -225,6 +253,7 @@ export default function Createbook() {
             <div className="fields">
               <label htmlFor="category">Category</label>
               <input
+                // defaultValue={data?.category}
                 className="border border-muted"
                 {...register("category", {
                   pattern: {
@@ -249,6 +278,7 @@ export default function Createbook() {
             <div className="fields">
               <label htmlFor="quantity">Quantity</label>
               <input
+                // defaultValue={data?.quantity}
                 className=" border border-muted"
                 type={"number"}
                 min={0}
@@ -272,6 +302,7 @@ export default function Createbook() {
             <div className="fields">
               <label htmlFor="releasedate">Release date</label>
               <input
+                // defaultValue={data?.releasedate}
                 className=" border border-muted"
                 type={"number"}
                 {...register("releasedate", {
@@ -293,10 +324,14 @@ export default function Createbook() {
                 style={flag ? { color: "green" } : { color: "red" }}
                 className="my-2 display-6"
               >
-                {available}
+                {/* {available} */}
               </div>
-              <button className="btn mt-5 btn-primary btn-lg" type="submit">
-                Create book
+              <button
+                disabled={btnState}
+                className="btn mt-5 btn-primary btn-lg"
+                type="submit"
+              >
+                Update book
               </button>
               <ToastContainer limit={1} />
             </div>

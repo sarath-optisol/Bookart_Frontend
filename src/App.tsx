@@ -13,6 +13,8 @@ import Lis from "./pages/Book";
 import Book from "./pages/ShowEachBook";
 import Createbook from "./pages/createbook";
 import { PrivateRoute, AdminRoute } from "./pages/AuthRoutes";
+import Updatebook from "./pages/Update";
+import Cart from "./pages/cart";
 function App() {
   return (
     <Routes>
@@ -33,6 +35,22 @@ function App() {
         element={
           <AdminRoute>
             <Createbook />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/cart"
+        element={
+          <PrivateRoute>
+            <Cart />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/admin/update-book/:id"
+        element={
+          <AdminRoute>
+            <Updatebook />
           </AdminRoute>
         }
       />

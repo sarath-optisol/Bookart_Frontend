@@ -8,7 +8,7 @@ import { useSelector, TypedUseSelectorHook, RootStateOrAny } from "react-redux";
 // }
 
 function useAuth() {
-  if (localStorage.getItem("token")) {
+  if (localStorage.getItem("user")) {
     return true;
   }
   return false;
